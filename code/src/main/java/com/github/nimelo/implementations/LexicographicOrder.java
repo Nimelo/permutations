@@ -16,14 +16,14 @@ public class LexicographicOrder<T extends Comparable> extends PermutationGenerat
     public T[] next() throws LastPermutationException {
         int k = findNonIncreasingSuffix();
 
-        if (k <= 0)
+        if (k < 0)
             throw new LastPermutationException();
 
         int l = findSuccessorToPivot(k);
 
-        swap(l, k - 1);
+        swap(l, k);
 
-        reverseBetween(k, currentPermutation.length - 1);
+        reverseBetween(k + 1, currentPermutation.length - 1);
 
         return Arrays.copyOf(currentPermutation, currentPermutation.length);
     }
@@ -54,15 +54,15 @@ public class LexicographicOrder<T extends Comparable> extends PermutationGenerat
     }
 
     private int findSuccessorToPivot(int pivot) {
-        int i = currentPermutation.length - 1;
-        while (currentPermutation[i].compareTo(currentPermutation[pivot - 1]) <= 0)
-            --i;
-        return i;
+        int l = currentPermutation.length - 1;
+        while(l > pivot && !(currentPermutation[l].compareTo(currentPermutation[pivot]) > 0))
+            --l;
+        return l;
     }
 
     private int findNonIncreasingSuffix() {
-        int i = currentPermutation.length - 1;
-        while (i > 0 && currentPermutation[i - 1].compareTo(currentPermutation[i]) >= 0)
+        int i = currentPermutation.length - 2;
+        while (i >= 0 && !(currentPermutation[i].compareTo(currentPermutation[i + 1]) < 0))
             --i;
         return i;
     }
